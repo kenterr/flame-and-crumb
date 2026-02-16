@@ -13,7 +13,7 @@ import type {
   OrderState,
 } from "@/lib/order-state";
 
-const GROK_MODEL = "grok-2-1212";
+const GROK_MODEL = "grok-4-1-fast-reasoning";
 
 function buildSystemPrompt(orderState: OrderState): string {
   const storeList = STORES.map(
