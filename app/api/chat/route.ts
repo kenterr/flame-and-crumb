@@ -440,7 +440,8 @@ export async function POST(req: Request) {
         .trim();
       s = s.replace(/\s*(Human|User):\s*[^\n]*/gi, "").trim();
       s = s.replace(/\n{2,}/g, "\n\n").trim();
-      return s || lastContent;
+      if (!s || /^\s*(Human|User):/i.test(s)) return "Got it! What would you like to order?";
+      return s;
     })();
     return Response.json({
       message,
