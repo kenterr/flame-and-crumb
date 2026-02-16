@@ -76,7 +76,9 @@ Always confirm actions in a short, friendly way. Use the tools whenever you add/
 }
 
 function getOpenAIClient(): OpenAI {
-  const key = process.env.XAI_API_KEY;
+  const key =
+    process.env.XAI_API_KEY ??
+    process.env.xai_api_key;
   if (!key) throw new Error("XAI_API_KEY is not configured");
   return new OpenAI({ apiKey: key, baseURL: "https://api.x.ai/v1" });
 }
@@ -276,9 +278,17 @@ export interface ChatRequestBody {
 }
 
 export async function POST(req: Request) {
-  const key = process.env.XAI_API_KEY;
+  const key =
+    process.env.XAI_API_KEY ??
+    process.env.xai_api_key;
   if (!key) {
-    return Response.json({ error: "XAI_API_KEY is not configured" }, { status: 500 });
+    return Response.json(
+      {
+        error:
+          "XAI_API_KEY is not set. In Vercel: Project Settings → Environment Variables → add XAI_API_KEY for Production, then redeploy.",
+      },
+      { status: 500 }
+    );
   }
   const openai = getOpenAIClient();
 
