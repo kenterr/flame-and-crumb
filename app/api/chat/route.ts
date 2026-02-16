@@ -426,12 +426,13 @@ export async function POST(req: Request) {
 
     const displayItemIds = displayItemIdSet.size > 0 ? Array.from(displayItemIdSet) : undefined;
     const defaultLocationList =
-      "Here are our Flame & Crumb locations:\n\n" +
+      "Here are the Flame & Crumb locations closest to you:\n\n" +
       STORES.map(
         (s) => `• ${s.name} — ${s.distance}, open until ${s.openUntil}, pickup ETA ${s.pickupEta}`
       ).join("\n") +
-      "\n\nWhich location would you like, or share your ZIP for the closest option?";
+      "\n\nWhich one would you like?";
     const message = (() => {
+      if (showStoreMap) return defaultLocationList;
       let s = lastContent
         .split("\n")
         .filter((line) => !/^\s*(Human|User):/i.test(line.trim()))
@@ -439,9 +440,7 @@ export async function POST(req: Request) {
         .trim();
       s = s.replace(/\s*(Human|User):\s*[^\n]*/gi, "").trim();
       s = s.replace(/\n{2,}/g, "\n\n").trim();
-      s = s || lastContent;
-      if (showStoreMap && !s.trim()) s = defaultLocationList;
-      return s;
+      return s || lastContent;
     })();
     return Response.json({
       message,
