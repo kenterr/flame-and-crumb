@@ -69,6 +69,8 @@ export interface MenuItemBase {
   description: string;
   category: "entree" | "side" | "drink";
   image?: string;
+  /** e.g. ["spicy"], ["combo"] for recommendations */
+  tags?: string[];
 }
 
 export const MENU_ITEMS: MenuItemBase[] = [
@@ -81,6 +83,49 @@ export const MENU_ITEMS: MenuItemBase[] = [
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
   },
   {
+    id: "spicy-flame-burger",
+    name: "Spicy Flame Burger",
+    price: 9.49,
+    description: "Flame-grilled beef, pepper jack, jalapeños, chipotle mayo, brioche bun",
+    category: "entree",
+    tags: ["spicy"],
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
+  },
+  {
+    id: "spicy-combo",
+    name: "Spicy Combo",
+    price: 9.99,
+    description: "Spicy Flame Burger + Fries. Best value under $10.",
+    category: "entree",
+    tags: ["spicy", "combo"],
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
+  },
+  {
+    id: "hot-wings",
+    name: "Hot Wings (6 pc)",
+    price: 6.99,
+    description: "Crispy wings tossed in buffalo sauce with ranch",
+    category: "entree",
+    tags: ["spicy"],
+    image: "https://images.unsplash.com/photo-1567620832903-0fc476de5b2b?w=400&q=80",
+  },
+  {
+    id: "chicken-sandwich",
+    name: "Crispy Chicken Sandwich",
+    price: 10.99,
+    description: "Crispy chicken, pickles, mayo, brioche bun",
+    category: "entree",
+    image: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=400&q=80",
+  },
+  {
+    id: "veggie-burger",
+    name: "Veggie Burger",
+    price: 11.99,
+    description: "House-made black bean patty, avocado, lettuce, tomato, chipotle aioli",
+    category: "entree",
+    image: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400&q=80",
+  },
+  {
     id: "fries",
     name: "Fries",
     price: 3.99,
@@ -89,12 +134,72 @@ export const MENU_ITEMS: MenuItemBase[] = [
     image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80",
   },
   {
+    id: "loaded-fries",
+    name: "Loaded Fries",
+    price: 5.99,
+    description: "Fries topped with cheese sauce and bacon",
+    category: "side",
+    tags: ["slang"],
+    image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80",
+  },
+  {
+    id: "onion-rings",
+    name: "Onion Rings",
+    price: 4.49,
+    description: "Beer-battered onion rings with ranch",
+    category: "side",
+    image: "https://images.unsplash.com/photo-1639024471283-03518883512d?w=400&q=80",
+  },
+  {
+    id: "coleslaw",
+    name: "Coleslaw",
+    price: 2.99,
+    description: "Creamy classic coleslaw",
+    category: "side",
+  },
+  {
+    id: "side-salad",
+    name: "Side Salad",
+    price: 3.49,
+    description: "Mixed greens, tomato, cucumber, vinaigrette",
+    category: "side",
+  },
+  {
     id: "coke",
     name: "Coke",
     price: 2.79,
     description: "Coca-Cola",
     category: "drink",
     image: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&q=80",
+  },
+  {
+    id: "diet-coke",
+    name: "Diet Coke",
+    price: 2.79,
+    description: "Diet Coca-Cola",
+    category: "drink",
+  },
+  {
+    id: "lemonade",
+    name: "Lemonade",
+    price: 3.29,
+    description: "Fresh-squeezed lemonade",
+    category: "drink",
+    image: "https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=400&q=80",
+  },
+  {
+    id: "iced-tea",
+    name: "Iced Tea",
+    price: 2.99,
+    description: "House brewed iced tea",
+    category: "drink",
+  },
+  {
+    id: "water",
+    name: "Water",
+    price: 0,
+    description: "Still water",
+    category: "drink",
   },
 ];
 

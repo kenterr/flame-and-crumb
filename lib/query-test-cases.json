@@ -1,0 +1,184 @@
+[
+  {
+    "test_id": "misspelling_01",
+    "test_type": "misspelling",
+    "query": "peperoni pizza",
+    "expected_ids": [],
+    "notes": "We don't have pizza; assistant should suggest burgers/wings/sandwiches"
+  },
+  {
+    "test_id": "misspelling_02",
+    "test_type": "misspelling",
+    "query": "cheezcake",
+    "expected_ids": [],
+    "notes": "We don't have cheesecake; suggest lemonade or other available items"
+  },
+  {
+    "test_id": "misspelling_03",
+    "test_type": "misspelling",
+    "query": "burger for vegetarians",
+    "expected_ids": ["veggie-burger"],
+    "notes": "Map to veggie-burger"
+  },
+  {
+    "test_id": "misspelling_04",
+    "test_type": "misspelling",
+    "query": "give me something with chick",
+    "expected_ids": ["chicken-sandwich"],
+    "notes": "Map to chicken-sandwich"
+  },
+  {
+    "test_id": "slang_01",
+    "test_type": "slang",
+    "query": "gimme some za",
+    "expected_ids": [],
+    "notes": "Za = pizza; we don't have pizza; suggest burgers, wings, chicken sandwich"
+  },
+  {
+    "test_id": "slang_02",
+    "test_type": "slang",
+    "query": "I want some wings",
+    "expected_ids": ["hot-wings"],
+    "notes": "Map to hot-wings"
+  },
+  {
+    "test_id": "slang_03",
+    "test_type": "slang",
+    "query": "got any loaded fries",
+    "expected_ids": ["loaded-fries"],
+    "notes": "Map to loaded-fries"
+  },
+  {
+    "test_id": "slang_04",
+    "test_type": "slang",
+    "query": "hook me up with a pie",
+    "expected_ids": [],
+    "notes": "Pie = pizza; we don't have; suggest alternatives"
+  },
+  {
+    "test_id": "slang_05",
+    "test_type": "slang",
+    "query": "any grub for the kiddos",
+    "expected_ids": [],
+    "notes": "Suggest kid-friendly: chicken-sandwich, fries, classic-flame-burger"
+  },
+  {
+    "test_id": "generic_01",
+    "test_type": "generic",
+    "query": "something healthy",
+    "expected_ids": ["veggie-burger", "side-salad"],
+    "notes": "Recommend veggie-burger or side-salad"
+  },
+  {
+    "test_id": "generic_02",
+    "test_type": "generic",
+    "query": "lots of cheese",
+    "expected_ids": ["classic-flame-burger"],
+    "notes": "Suggest burger with extra cheese add-on"
+  },
+  {
+    "test_id": "generic_03",
+    "test_type": "generic",
+    "query": "something for a group",
+    "expected_ids": [],
+    "notes": "Suggest combos, multiple items (spicy-combo, wings, fries)"
+  },
+  {
+    "test_id": "generic_04",
+    "test_type": "generic",
+    "query": "what can I get for breakfast",
+    "expected_ids": [],
+    "notes": "We don't serve breakfast; politely say lunch/dinner only"
+  },
+  {
+    "test_id": "recommendation_01",
+    "test_type": "recommendation",
+    "query": "recommend a sandwich without onions or mushroom",
+    "expected_ids": ["chicken-sandwich"],
+    "notes": "Chicken sandwich; note no onions/mushroom in customization"
+  },
+  {
+    "test_id": "recommendation_02",
+    "test_type": "recommendation",
+    "query": "what burger would you suggest for someone who hates spicy",
+    "expected_ids": ["classic-flame-burger", "veggie-burger"],
+    "notes": "Suggest classic or veggie burger"
+  },
+  {
+    "test_id": "recommendation_03",
+    "test_type": "recommendation",
+    "query": "suggest a filling dinner combo with fries",
+    "expected_ids": ["spicy-combo", "classic-flame-burger", "fries"],
+    "notes": "Spicy combo or burger + fries"
+  },
+  {
+    "test_id": "recommendation_04",
+    "test_type": "recommendation",
+    "query": "spicy combo under 10 dollars",
+    "expected_ids": ["spicy-combo", "spicy-flame-burger", "hot-wings"],
+    "notes": "Spicy combo $9.99, spicy burger $9.49, wings $6.99"
+  },
+  {
+    "test_id": "byo_creative_01",
+    "test_type": "byo_creative",
+    "query": "build me a spicy salmon burger with jalapeños",
+    "expected_ids": ["classic-flame-burger", "spicy-flame-burger"],
+    "notes": "Spicy flame burger has jalapeños; add salmon add-on to classic or suggest spicy"
+  },
+  {
+    "test_id": "byo_creative_02",
+    "test_type": "byo_creative",
+    "query": "make me a vegetarian Greek-style pizza",
+    "expected_ids": ["veggie-burger"],
+    "notes": "We don't have pizza; suggest veggie-burger as vegetarian option"
+  },
+  {
+    "test_id": "byo_creative_03",
+    "test_type": "byo_creative",
+    "query": "kale salad with grilled chicken",
+    "expected_ids": ["side-salad", "chicken-sandwich"],
+    "notes": "Side salad + chicken sandwich or suggest both"
+  },
+  {
+    "test_id": "not_in_menu_01",
+    "test_type": "not_in_menu",
+    "query": "do you have tacos",
+    "expected_ids": [],
+    "notes": "Politely say no; suggest Spicy Flame Burger, Hot Wings, etc."
+  },
+  {
+    "test_id": "not_in_menu_02",
+    "test_type": "not_in_menu",
+    "query": "lobster roll",
+    "expected_ids": [],
+    "notes": "We don't have; suggest chicken sandwich or burgers"
+  },
+  {
+    "test_id": "not_in_menu_03",
+    "test_type": "not_in_menu",
+    "query": "sushi platter",
+    "expected_ids": [],
+    "notes": "We don't have; suggest alternatives from menu"
+  },
+  {
+    "test_id": "not_in_menu_04",
+    "test_type": "not_in_menu",
+    "query": "acai bowl",
+    "expected_ids": [],
+    "notes": "We don't have; suggest side-salad, lemonade"
+  },
+  {
+    "test_id": "not_in_menu_05",
+    "test_type": "not_in_menu",
+    "query": "pad thai",
+    "expected_ids": [],
+    "notes": "We don't have; suggest noodles-free alternatives"
+  },
+  {
+    "test_id": "not_in_menu_06",
+    "test_type": "not_in_menu",
+    "query": "chicken tikka masala",
+    "expected_ids": [],
+    "notes": "We don't have; suggest chicken-sandwich or spicy options"
+  }
+]

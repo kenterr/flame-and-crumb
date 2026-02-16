@@ -21,6 +21,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const scrollToBottom = useCallback(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
@@ -128,6 +129,7 @@ export default function Home() {
               className="flex gap-2"
             >
               <input
+                ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -145,8 +147,14 @@ export default function Home() {
             </form>
           </div>
         </div>
-        <aside className="w-72 shrink-0 overflow-y-auto">
-          <OrderSummary orderState={orderState} />
+        <aside className="sticky top-4 w-72 shrink-0 self-start overflow-y-auto rounded-xl border border-stone-200 bg-stone-50/80 shadow-sm" style={{ maxHeight: "calc(100vh - 6rem)" }}>
+          <OrderSummary
+            orderState={orderState}
+            onCheckoutClick={() => {
+              setInput("Place order");
+              inputRef.current?.focus();
+            }}
+          />
         </aside>
       </div>
     </main>

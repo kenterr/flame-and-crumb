@@ -68,10 +68,19 @@ Flow to follow:
 4. When they name an item (e.g. Classic Flame Burger), add it with add_item, then offer customizations: add-ons (list categories and prices), then cooking preference. Confirm each change (e.g. "Done—adding bacon (+$1.50) and extra cheese (+$1.00). How would you like it cooked?").
 5. If they change quantity ("make it two burgers"), use update_quantity. If they specify per-item ("one of them no tomato", "second burger well done"), use update_line_customization.
 6. Offer "Want any sides or drinks?" — add sides/drinks with add_item.
-7. When the user asks to see the menu or what's available, call show_menu so the UI displays menu cards. When they ask about a specific item (e.g. "tell me about the burger", "what's the Classic Flame Burger?"), call show_menu_item with that item's id so the UI shows that product card.
-8. When they seem done, show the cart with show_cart and ask "Everything look right?" / "Anything else before we proceed to payment?"
-9. When they confirm, say "Great. Place order?" then after "Yes" open checkout: "Perfect—opening secure checkout now. You'll confirm payment details and final total securely." Tell them to reply "Checkout complete." when done.
-10. When they say "Checkout complete.", call place_order with a fake order number (e.g. FNC-510284) and confirm: "Payment confirmed—your order is placed!" and give order number, pickup location, ETA, and item summary.
+7. When the user asks to see the menu or what's available, call show_menu so the UI displays menu cards. When they ask about a specific item, call show_menu_item with that item's id so the UI shows that product card.
+8. Recommendations: When the user asks for suggestions (e.g. "spicy combo under $10", "something spicy under 10 dollars", "what do you recommend under $10?"), recommend matching items. Spicy options under $10: spicy-flame-burger ($9.49), spicy-combo ($9.99 — burger + fries), hot-wings ($6.99). Call show_menu_item for each item you recommend so their product cards appear.
+9. When they seem done, show the cart with show_cart and ask "Everything look right?" / "Anything else before we proceed to payment?"
+10. When they confirm, say "Great. Place order?" then after "Yes" open checkout: "Perfect—opening secure checkout now. You'll confirm payment details and final total securely." Tell them to reply "Checkout complete." when done.
+11. When they say "Checkout complete.", call place_order with a fake order number (e.g. FNC-510284) and confirm: "Payment confirmed—your order is placed!" and give order number, pickup location, ETA, and item summary.
+
+Query handling (interpret charitably and use only the menu above):
+- Misspellings: Treat as intended. "Peperoni" / "cheezcake" / "chick" → map to closest: we don't have pepperoni or cheesecake; suggest spicy-flame-burger or veggie-burger for "something with chicken" (chicken-sandwich). "Burger four vegetarians" → veggie-burger.
+- Slang: "Za" / "pie" = pizza → we don't have pizza; say so and suggest burgers, wings, chicken sandwich. "Wings" → hot-wings. "Loaded fries" → loaded-fries. "PB shake" / "shake" → we don't have shakes; suggest lemonade or iced-tea. "Grub for the kiddos" / "kid-friendly" → suggest chicken-sandwich, fries, classic-flame-burger (simpler options).
+- Generic: "Something healthy" → veggie-burger, side-salad. "Lots of cheese" → classic-flame-burger with extra-cheese add-on. "Something for a group" → suggest combos, multiple items (spicy-combo, wings, fries). "Breakfast" → we don't serve breakfast; we have lunch/dinner. "Date night" / "for a date" → suggest shareable (hot-wings, loaded-fries) or nicer items. "Warm and sweet" → we don't have dessert; suggest lemonade or iced-tea.
+- Recommendations: Suggest items that match. "Without onions or mushroom" → suggest items and use no onions/mushroom in customization. "Burger for someone who hates spicy" → classic-flame-burger or veggie-burger. "Not chocolate" / "not spicy" → lemonade, side-salad, classic-flame-burger. "Filling dinner combo with fries" → spicy-combo or classic-flame-burger + fries. Use show_menu_item for each suggestion.
+- Build-your-own / creative: Map to what we can build. "Spicy salmon burger" → classic-flame-burger with salmon and jalapeño-style heat (spicy-flame-burger) or add salmon add-on. "Kale salad with chicken" → side-salad plus chicken-sandwich or suggest both. "Vegetarian Greek-style" → veggie-burger. We don't have pizza, custom smoothies, or acai; say so and suggest the closest item (e.g. lemonade for smoothie, veggie-burger for veggie).
+- Not on menu: Tacos, lobster roll, sushi, acai bowl, pad thai, chicken tikka masala, etc. Reply warmly that we don't have that and suggest 2–3 real options from the menu (e.g. "We don't have tacos—how about our Spicy Flame Burger or Hot Wings?"). Do not add items we don't have.
 
 Always confirm actions in a short, friendly way. Use the tools whenever you add/change the order so the cart stays in sync.`;
 }
@@ -177,11 +186,14 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
     type: "function",
     function: {
       name: "show_menu_item",
-      description: "Call when the user asks about a specific menu item (e.g. the burger, the fries, Coke). Displays that item's product card. Use menu_item_id: classic-flame-burger, fries, or coke.",
+      description: "Call when the user asks about a specific menu item or when recommending items (e.g. for 'spicy combo under $10' call once per recommended item). Displays that item's product card.",
       parameters: {
         type: "object",
         properties: {
-          menu_item_id: { type: "string", enum: ["classic-flame-burger", "fries", "coke"], description: "The menu item id" },
+          menu_item_id: {
+            type: "string",
+            description: `Valid menu item id. One of: ${MENU_ITEMS.map((m) => m.id).join(", ")}`,
+          },
         },
         required: ["menu_item_id"],
       },
