@@ -334,7 +334,15 @@ export async function POST(req: Request) {
     return Response.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { messages, orderState: initialOrderState } = body;
+  const { messages, orderState: orderStateFromBody } = body;
+  const initialOrderState: OrderState = {
+    ...orderStateFromBody,
+    cart: (orderStateFromBody.cart ?? []).map((line) => ({
+      ...line,
+      addOns: [...(line.addOns ?? [])],
+      customization: line.customization ? { ...line.customization } : undefined,
+    })),
+  };
   const systemPrompt = buildSystemPrompt(initialOrderState);
 
   const apiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -342,7 +350,7 @@ export async function POST(req: Request) {
     ...messages,
   ];
 
-  let orderState = initialOrderState;
+  let orderState: OrderState = initialOrderState;
   let lastContent = "";
   const displayItemIdSet = new Set<string>();
 

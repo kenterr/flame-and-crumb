@@ -22,6 +22,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const orderStateRef = useRef<OrderState>(initialOrderState);
+  orderStateRef.current = orderState;
   const scrollToBottom = useCallback(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
@@ -34,6 +36,7 @@ export default function Home() {
     setLoading(true);
     scrollToBottom();
 
+    const currentOrderState = orderStateRef.current;
     try {
       const nextMessages: Message[] = [...messages, { role: "user", content: text }];
       const res = await fetch("/api/chat", {
@@ -44,7 +47,7 @@ export default function Home() {
             role: msg.role,
             content: msg.content,
           })),
-          orderState,
+          orderState: currentOrderState,
         }),
       });
       const data = await res.json();
@@ -55,7 +58,9 @@ export default function Home() {
         ]);
         return;
       }
-      setOrderState(data.orderState ?? orderState);
+      const nextOrderState = data.orderState ?? currentOrderState;
+      orderStateRef.current = nextOrderState;
+      setOrderState(nextOrderState);
       setMessages((m) => [
         ...m,
         {
@@ -76,7 +81,7 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }, [input, loading, messages, orderState, scrollToBottom]);
+  }, [input, loading, messages, scrollToBottom]);
 
   return (
     <main className="mx-auto flex min-h-screen max-w-4xl flex-col bg-stone-100 p-4">
@@ -85,8 +90,8 @@ export default function Home() {
         <span className="text-sm text-stone-500">Order for pickup or delivery</span>
       </header>
 
-      <div className="flex flex-1 gap-4 overflow-hidden">
-        <div className="flex flex-1 flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
+      <div className="flex flex-1 gap-4 overflow-hidden pr-[18rem]">
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center py-12 text-center text-stone-500">
@@ -147,7 +152,10 @@ export default function Home() {
             </form>
           </div>
         </div>
-        <aside className="sticky top-4 w-72 shrink-0 self-start overflow-y-auto rounded-xl border border-stone-200 bg-stone-50/80 shadow-sm" style={{ maxHeight: "calc(100vh - 6rem)" }}>
+        <aside
+          className="fixed right-4 top-20 z-10 w-72 overflow-y-auto rounded-xl border border-stone-200 bg-stone-50/95 shadow-lg backdrop-blur-sm"
+          style={{ maxHeight: "calc(100vh - 6rem)" }}
+        >
           <OrderSummary
             orderState={orderState}
             onCheckoutClick={() => {
