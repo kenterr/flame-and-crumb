@@ -2,7 +2,10 @@
 
 import { useCallback, useRef, useState } from "react";
 import { ChatMessage } from "@/components/ChatMessage";
+import { MenuItemCard } from "@/components/MenuItemCard";
+import { MenuGrid } from "@/components/MenuGrid";
 import { OrderSummary } from "@/components/OrderSummary";
+import { MENU_ITEMS } from "@/lib/menu";
 import type { OrderState } from "@/lib/order-state";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -77,11 +80,20 @@ export default function Home() {
 
       <div className="flex flex-1 gap-4 overflow-hidden">
         <div className="flex flex-1 flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
+          <div className="flex-none overflow-x-auto border-b border-stone-100 px-3 py-2">
+            <div className="flex gap-3">
+              {MENU_ITEMS.map((item) => (
+                <div key={item.id} className="w-36 shrink-0">
+                  <MenuItemCard item={item} />
+                </div>
+              ))}
+            </div>
+          </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-12 text-center text-stone-500">
+              <div className="flex flex-col items-center justify-center py-8 text-center text-stone-500">
                 <p className="text-lg">Hey, can I order from Flame & Crumb?</p>
-                <p className="mt-2 text-sm">Type a message below to start.</p>
+                <p className="mt-2 text-sm">Type a message below or tap an item above.</p>
               </div>
             )}
             {messages.map((msg, i) => (
@@ -122,7 +134,8 @@ export default function Home() {
             </form>
           </div>
         </div>
-        <aside className="w-72 shrink-0 overflow-y-auto">
+        <aside className="w-72 shrink-0 space-y-4 overflow-y-auto">
+          <MenuGrid />
           <OrderSummary orderState={orderState} />
         </aside>
       </div>

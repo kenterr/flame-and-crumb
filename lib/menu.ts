@@ -68,6 +68,7 @@ export interface MenuItemBase {
   price: number;
   description: string;
   category: "entree" | "side" | "drink";
+  image?: string;
 }
 
 export const MENU_ITEMS: MenuItemBase[] = [
@@ -77,6 +78,7 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 12.99,
     description: "Flame-grilled Angus beef, aged cheddar, lettuce, tomato, special sauce, brioche bun",
     category: "entree",
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
   },
   {
     id: "fries",
@@ -84,6 +86,7 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 3.99,
     description: "Crispy seasoned fries",
     category: "side",
+    image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80",
   },
   {
     id: "coke",
@@ -91,6 +94,7 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 2.79,
     description: "Coca-Cola",
     category: "drink",
+    image: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&q=80",
   },
 ];
 
