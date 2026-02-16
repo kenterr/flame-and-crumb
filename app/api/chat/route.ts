@@ -68,9 +68,10 @@ Flow to follow:
 4. When they name an item (e.g. Classic Flame Burger), add it with add_item, then offer customizations: add-ons (list categories and prices), then cooking preference. Confirm each change (e.g. "Done—adding bacon (+$1.50) and extra cheese (+$1.00). How would you like it cooked?").
 5. If they change quantity ("make it two burgers"), use update_quantity. If they specify per-item ("one of them no tomato", "second burger well done"), use update_line_customization.
 6. Offer "Want any sides or drinks?" — add sides/drinks with add_item.
-7. When they seem done, show the cart with show_cart and ask "Everything look right?" / "Anything else before we proceed to payment?"
-8. When they confirm, say "Great. Place order?" then after "Yes" open checkout: "Perfect—opening secure checkout now. You'll confirm payment details and final total securely." Tell them to reply "Checkout complete." when done.
-9. When they say "Checkout complete.", call place_order with a fake order number (e.g. FNC-510284) and confirm: "Payment confirmed—your order is placed!" and give order number, pickup location, ETA, and item summary.
+7. When the user asks to see the menu or what's available, call show_menu so the UI displays menu cards. When they ask about a specific item (e.g. "tell me about the burger", "what's the Classic Flame Burger?"), call show_menu_item with that item's id so the UI shows that product card.
+8. When they seem done, show the cart with show_cart and ask "Everything look right?" / "Anything else before we proceed to payment?"
+9. When they confirm, say "Great. Place order?" then after "Yes" open checkout: "Perfect—opening secure checkout now. You'll confirm payment details and final total securely." Tell them to reply "Checkout complete." when done.
+10. When they say "Checkout complete.", call place_order with a fake order number (e.g. FNC-510284) and confirm: "Payment confirmed—your order is placed!" and give order number, pickup location, ETA, and item summary.
 
 Always confirm actions in a short, friendly way. Use the tools whenever you add/change the order so the cart stays in sync.`;
 }
@@ -161,6 +162,28 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
           no_lettuce: { type: "boolean" },
         },
         required: ["line_index"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "show_menu",
+      description: "Call when the user asks to see the menu or what's available. Displays all menu item cards in the UI. No parameters.",
+      parameters: { type: "object", properties: {} },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "show_menu_item",
+      description: "Call when the user asks about a specific menu item (e.g. the burger, the fries, Coke). Displays that item's product card. Use menu_item_id: classic-flame-burger, fries, or coke.",
+      parameters: {
+        type: "object",
+        properties: {
+          menu_item_id: { type: "string", enum: ["classic-flame-burger", "fries", "coke"], description: "The menu item id" },
+        },
+        required: ["menu_item_id"],
       },
     },
   },
@@ -260,7 +283,7 @@ function applyToolCall(
     return next;
   }
 
-  if (name === "show_cart") {
+  if (name === "show_cart" || name === "show_menu" || name === "show_menu_item") {
     return next;
   }
 
@@ -309,6 +332,7 @@ export async function POST(req: Request) {
 
   let orderState = initialOrderState;
   let lastContent = "";
+  const displayItemIdSet = new Set<string>();
 
   try {
     let response = await openai.chat.completions.create({
@@ -340,7 +364,13 @@ export async function POST(req: Request) {
         try {
           args = JSON.parse(tc.function?.arguments ?? "{}") as Record<string, unknown>;
         } catch {}
-        orderState = applyToolCall(name, args, orderState);
+        if (name === "show_menu") {
+          MENU_ITEMS.forEach((i) => displayItemIdSet.add(i.id));
+        } else if (name === "show_menu_item" && typeof args.menu_item_id === "string") {
+          if (getMenuItem(args.menu_item_id)) displayItemIdSet.add(args.menu_item_id);
+        } else {
+          orderState = applyToolCall(name, args, orderState);
+        }
         toolResults.push({
           role: "tool",
           tool_call_id: tc.id!,
@@ -361,9 +391,11 @@ export async function POST(req: Request) {
       lastContent = (followMsg?.content as string) ?? lastContent;
     }
 
+    const displayItemIds = displayItemIdSet.size > 0 ? Array.from(displayItemIdSet) : undefined;
     return Response.json({
       message: lastContent,
       orderState,
+      ...(displayItemIds ? { displayItemIds } : {}),
     });
   } catch (err) {
     console.error("Grok API error:", err);
