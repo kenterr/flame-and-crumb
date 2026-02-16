@@ -42,6 +42,8 @@ function buildSystemPrompt(orderState: OrderState): string {
 
   return `You are the friendly ordering assistant for "Flame & Crumb", a restaurant. You help the user order food for pickup or delivery.
 
+Important: Only output your own reply. Never include "Human:", "User:", or any simulated or predicted user message in your response. Do not output a location or store name as if the user said it—wait for the user to actually type their choice.
+
 Current order state (use the tools to update it; do not invent state):
 - Store chosen: ${orderState.storeId ?? "not set (user can say no to location, then ask ZIP or city/state)"}
 - Mode (pickup/delivery): ${orderState.mode ?? "not set"}
@@ -63,8 +65,8 @@ Cooking preferences for burgers: rare, medium-rare, medium, medium-well, well-do
 
 Flow to follow:
 1. Greet and offer pickup or delivery. If user says they want to order, ask for location (use location to find closest stores) or ZIP/city if they decline.
-2. Show nearby stores (list them), ask which location.
-3. After store is chosen, ask pickup or delivery, then "What would you like to order?"
+2. When the user says only "pickup" or "delivery", that is their service type—call set_mode with that value. Then call show_store_locations so the map is shown, and in your reply acknowledge it (e.g. "Got it, delivery!") and list nearby stores with ETAs and ask which location they want (or ask for ZIP). Do not output a store name yourself; wait for the user to choose.
+3. After store is chosen (user says e.g. "River North"), call set_store, then ask "What would you like to order?"
 4. When they name an item (e.g. Classic Flame Burger), add it with add_item, then offer customizations: add-ons (list categories and prices), then cooking preference. Confirm each change (e.g. "Done—adding bacon (+$1.50) and extra cheese (+$1.00). How would you like it cooked?").
 5. If they change quantity ("make it two burgers"), use update_quantity. If they specify per-item ("one of them no tomato", "second burger well done"), use update_line_customization.
 6. Offer "Want any sides or drinks?" — add sides/drinks with add_item.
@@ -172,6 +174,14 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
         },
         required: ["line_index"],
       },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "show_store_locations",
+      description: "Call whenever you are listing Flame & Crumb store locations (e.g. after user chooses pickup or delivery, or asks for locations). Displays the store map in the UI. No parameters.",
+      parameters: { type: "object", properties: {} },
     },
   },
   {
@@ -295,7 +305,7 @@ function applyToolCall(
     return next;
   }
 
-  if (name === "show_cart" || name === "show_menu" || name === "show_menu_item") {
+  if (name === "show_cart" || name === "show_menu" || name === "show_menu_item" || name === "show_store_locations") {
     return next;
   }
 
@@ -353,6 +363,7 @@ export async function POST(req: Request) {
   let orderState: OrderState = initialOrderState;
   let lastContent = "";
   const displayItemIdSet = new Set<string>();
+  let showStoreMap = false;
 
   try {
     let response = await openai.chat.completions.create({
@@ -384,7 +395,9 @@ export async function POST(req: Request) {
         try {
           args = JSON.parse(tc.function?.arguments ?? "{}") as Record<string, unknown>;
         } catch {}
-        if (name === "show_menu") {
+        if (name === "show_store_locations") {
+          showStoreMap = true;
+        } else if (name === "show_menu") {
           MENU_ITEMS.forEach((i) => displayItemIdSet.add(i.id));
         } else if (name === "show_menu_item" && typeof args.menu_item_id === "string") {
           if (getMenuItem(args.menu_item_id)) displayItemIdSet.add(args.menu_item_id);
@@ -413,9 +426,17 @@ export async function POST(req: Request) {
 
     const displayItemIds = displayItemIdSet.size > 0 ? Array.from(displayItemIdSet) : undefined;
     return Response.json({
-      message: lastContent,
+      message: (() => {
+        const sanitized = lastContent
+          .split("\n")
+          .filter((line) => !/^\s*(Human|User):/i.test(line.trim()))
+          .join("\n")
+          .trim();
+        return sanitized || lastContent;
+      })(),
       orderState,
       ...(displayItemIds ? { displayItemIds } : {}),
+      ...(showStoreMap ? { showStoreMap: true } : {}),
     });
   } catch (err) {
     console.error("Grok API error:", err);

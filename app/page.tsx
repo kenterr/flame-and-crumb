@@ -7,7 +7,7 @@ import { OrderSummary } from "@/components/OrderSummary";
 import { getMenuItem } from "@/lib/menu";
 import type { OrderState } from "@/lib/order-state";
 
-type Message = { role: "user" | "assistant"; content: string; itemIds?: string[] };
+type Message = { role: "user" | "assistant"; content: string; itemIds?: string[]; showStoreMap?: boolean };
 
 const initialOrderState: OrderState = {
   storeId: undefined,
@@ -67,6 +67,7 @@ export default function Home() {
           role: "assistant",
           content: data.message || "",
           itemIds: data.displayItemIds,
+          showStoreMap: data.showStoreMap,
         },
       ]);
       scrollToBottom();
@@ -90,7 +91,9 @@ export default function Home() {
         <span className="text-sm text-stone-500">Order for pickup or delivery</span>
       </header>
 
-      <div className="flex flex-1 gap-4 overflow-hidden pr-[18rem]">
+      <div
+        className={`flex flex-1 gap-4 overflow-hidden ${orderState.cart.length > 0 || orderState.orderNumber ? "pr-[18rem]" : ""}`}
+      >
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm">
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.length === 0 && (
@@ -112,6 +115,15 @@ export default function Home() {
                           <MenuItemCard item={item!} />
                         </div>
                       ))}
+                  </div>
+                )}
+                {msg.role === "assistant" && msg.showStoreMap && (
+                  <div className="pl-1">
+                    <img
+                      src="/locations-map.png"
+                      alt="Flame & Crumb locations"
+                      className="max-w-sm rounded-lg border border-stone-200 shadow-sm"
+                    />
                   </div>
                 )}
               </div>
@@ -152,18 +164,20 @@ export default function Home() {
             </form>
           </div>
         </div>
-        <aside
-          className="fixed right-4 top-20 z-10 w-72 overflow-y-auto rounded-xl border border-stone-200 bg-stone-50/95 shadow-lg backdrop-blur-sm"
-          style={{ maxHeight: "calc(100vh - 6rem)" }}
-        >
-          <OrderSummary
-            orderState={orderState}
-            onCheckoutClick={() => {
-              setInput("Place order");
-              inputRef.current?.focus();
-            }}
-          />
-        </aside>
+        {(orderState.cart.length > 0 || orderState.orderNumber) && (
+          <aside
+            className="fixed right-4 top-20 z-10 w-72 overflow-y-auto rounded-xl border border-stone-200 bg-stone-50/95 shadow-lg backdrop-blur-sm"
+            style={{ maxHeight: "calc(100vh - 6rem)" }}
+          >
+            <OrderSummary
+              orderState={orderState}
+              onCheckoutClick={() => {
+                setInput("Place order");
+                inputRef.current?.focus();
+              }}
+            />
+          </aside>
+        )}
       </div>
     </main>
   );
