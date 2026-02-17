@@ -62,7 +62,7 @@ export const SAUCE_MAX_PER_ITEM = 2;
 
 export type CookingPreference = "rare" | "medium-rare" | "medium" | "medium-well" | "well-done";
 
-export type DisplayCategory = "Hamburgers" | "Sides" | "Drinks" | "Combos";
+export type DisplayCategory = "Hamburgers" | "Wings" | "Sides" | "Drinks" | "Combos";
 
 export interface MenuItemBase {
   id: string;
@@ -70,7 +70,7 @@ export interface MenuItemBase {
   price: number;
   description: string;
   category: "entree" | "side" | "drink";
-  /** Section title when showing menu: Hamburgers, Sides, Drinks, Combos */
+  /** Section title when showing menu: Hamburgers, Wings, Sides, Drinks, Combos */
   displayCategory: DisplayCategory;
   image?: string;
   /** e.g. ["spicy"], ["combo"] for recommendations */
@@ -80,6 +80,7 @@ export interface MenuItemBase {
 /** Order to show menu sections when displaying cards */
 export const DISPLAY_CATEGORY_ORDER: DisplayCategory[] = [
   "Hamburgers",
+  "Wings",
   "Sides",
   "Drinks",
   "Combos",
@@ -112,7 +113,7 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 6.99,
     description: "Crispy wings tossed in buffalo sauce with ranch",
     category: "entree",
-    displayCategory: "Hamburgers",
+    displayCategory: "Wings",
     tags: ["spicy"],
     image: "https://images.unsplash.com/photo-1567620832903-0fc476de5b2b?w=400&q=80",
   },
