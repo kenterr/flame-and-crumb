@@ -375,6 +375,7 @@ export async function POST(req: Request) {
       messages: apiMessages,
       tools,
       tool_choice: "auto",
+      max_tokens: 8192,
     });
 
     const choice = response.choices?.[0];
@@ -423,6 +424,7 @@ export async function POST(req: Request) {
         ],
         tools,
         tool_choice: "none",
+        max_tokens: 8192,
       });
       const followMsg = followUp.choices?.[0]?.message;
       lastContent = (followMsg?.content as string) ?? lastContent;
