@@ -71,12 +71,12 @@ Flow to follow:
 5. If they change quantity ("make it two burgers"), use update_quantity. If they specify per-item ("one of them no tomato", "second burger well done"), use update_line_customization.
 6. Offer "Want any sides or drinks?" — add sides/drinks with add_item.
 7. When the user asks to see the menu or what's available, call show_menu so the UI displays menu cards grouped by category (Hamburgers, Sides, Drinks, Combos). When they ask about a specific item, call show_menu_item with that item's id so the UI shows that product card.
-8. Recommendations: When the user asks for suggestions (e.g. "spicy combo under $10", "something spicy under 10 dollars", "what do you recommend under $10?"), recommend matching items. Spicy options under $10: spicy-flame-burger ($9.49), spicy-combo ($9.99 — burger + fries), hot-wings ($6.99). We have many combos (classic-combo, chicken-combo, veggie-combo, wings-combo, double-burger-combo, family-combo, loaded-combo) and many sodas (Coke, Diet Coke, Sprite, Dr Pepper, Root Beer, Fanta Orange, Mountain Dew, Ginger Ale, plus lemonade, iced tea, water). Call show_menu_item for each item you recommend so their product cards appear.
+8. Recommendations: When the user asks for suggestions or shares preferences/dietary, recommend matching items and call show_menu_item so their product cards appear. In your reply, always state what you're recommending and why (e.g. "For a spicy vegetarian, our Veggie Burger is perfect—chipotle aioli gives it a nice kick. Want to add it?"). Never reply with only a generic "Got it, what would you like?" when showing recommendation cards. Spicy under $10: spicy-flame-burger ($9.49), spicy-combo ($9.99), hot-wings ($6.99). Combos and sodas as listed in the menu.
 9. When they seem done, show the cart with show_cart and ask "Everything look right?" / "Anything else before we proceed to payment?"
 10. When they confirm, say "Great. Place order?" then after "Yes" open checkout: "Perfect—opening secure checkout now. You'll confirm payment details and final total securely." Tell them to reply "Checkout complete." when done.
 11. When they say "Checkout complete.", call place_order with a fake order number (e.g. FNC-510284) and confirm: "Payment confirmed—your order is placed!" and give order number, pickup location, ETA, and item summary.
 
-When users share preferences (e.g. "I love spicy", "plain please", "something with chicken") or dietary needs (gluten-free, no dairy, vegan, vegetarian, no red meat): suggest matching items and build a meal—e.g. vegan → veggie-burger and sides/drinks; no red meat → chicken-sandwich or hot-wings; no dairy → items without cheese, offer vegan cheese add-on where it fits. Use show_menu_item for suggestions.
+When users share preferences (e.g. "I love spicy", "plain please", "something with chicken") or dietary needs (gluten-free, no dairy, vegan, vegetarian, no red meat): suggest matching items and build a meal—e.g. vegan → veggie-burger; no red meat → chicken-sandwich or hot-wings; no dairy → items without cheese, offer vegan cheese add-on where it fits. Use show_menu_item for each suggestion. Critical: when you recommend item(s) in response to preferences or dietary, your reply must NOT be generic. Do not say only "Got it! What would you like to order?" or similar. Your message must: (1) acknowledge their preferences warmly (e.g. "A spice-loving vegetarian—nice!"), (2) clearly state your recommendation (e.g. "I've got just the thing for you: our Veggie Burger"), (3) briefly explain why it fits (e.g. "it's fully vegetarian and has chipotle aioli for a little kick"), (4) ask if they'd like to add it. The product card will appear below your message; your text should introduce and explain the recommendation so it feels helpful and personal.
 
 Query handling (interpret charitably and use only the menu above):
 - Misspellings: Treat as intended. "Peperoni" / "cheezcake" / "chick" → map to closest: we don't have pepperoni or cheesecake; suggest spicy-flame-burger or veggie-burger for "something with chicken" (chicken-sandwich). "Burger four vegetarians" → veggie-burger.
@@ -442,7 +442,11 @@ export async function POST(req: Request) {
         .trim();
       s = s.replace(/\s*(Human|User):\s*[^\n]*/gi, "").trim();
       s = s.replace(/\n{2,}/g, "\n\n").trim();
-      if (!s || /^\s*(Human|User):/i.test(s)) return "Got it! What would you like to order?";
+      if (!s || /^\s*(Human|User):/i.test(s)) {
+        return displayItemIds?.length
+          ? "Here are some options that might work for you—take a look above and tell me what you'd like!"
+          : "Got it! What would you like to order?";
+      }
       return s;
     })();
     return Response.json({
