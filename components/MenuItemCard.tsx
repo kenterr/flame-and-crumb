@@ -18,14 +18,14 @@ export function MenuItemCard({ item, compact }: MenuItemCardProps) {
 
   return (
     <article
-      className={`overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm transition hover:shadow-md ${
+      className={`overflow-hidden rounded-2xl border border-white/40 bg-white/70 shadow-lg shadow-stone-200/50 backdrop-blur-xl transition hover:shadow-xl hover:border-white/60 ${
         compact
           ? "flex w-[9rem] shrink-0 gap-3 p-2"
-          : "flex h-[14rem] w-[9rem] shrink-0 flex-col"
+          : "flex h-[14rem] w-full min-w-0 flex-col"
       }`}
     >
       <div
-        className={`relative flex shrink-0 items-center justify-center overflow-hidden bg-stone-100 ${
+        className={`relative flex shrink-0 items-center justify-center overflow-hidden bg-stone-100/80 ${
           compact ? "h-14 w-14 rounded-lg" : "w-full"
         }`}
         style={

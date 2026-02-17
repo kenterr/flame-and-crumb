@@ -20,7 +20,7 @@ export function OrderSummary({ orderState, onCheckoutClick }: OrderSummaryProps)
 
   if (orderPlaced) {
     return (
-      <section className="rounded-xl border border-stone-200 bg-white p-4 shadow-sm">
+      <section className="rounded-2xl border border-white/40 bg-white/80 p-4 shadow-lg backdrop-blur-xl md:rounded-2xl">
         <h3 className="font-semibold text-stone-800">Order placed</h3>
         <p className="mt-1 text-sm text-stone-600">Order #{orderState.orderNumber}</p>
         {store && (
@@ -44,7 +44,7 @@ export function OrderSummary({ orderState, onCheckoutClick }: OrderSummaryProps)
   }
 
   return (
-    <section className="rounded-xl border border-stone-200 bg-white p-4 shadow-sm">
+    <section className="rounded-2xl border border-white/40 bg-white/80 p-4 shadow-lg backdrop-blur-xl md:rounded-2xl">
       <h3 className="font-semibold text-stone-800">Your order</h3>
       {!hasItems ? (
         <p className="mt-2 text-sm text-stone-500">Cart is empty</p>
