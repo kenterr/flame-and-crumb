@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import { ChatMessage } from "@/components/ChatMessage";
 import { MenuItemCard } from "@/components/MenuItemCard";
 import { OrderSummary } from "@/components/OrderSummary";
-import { getMenuItem } from "@/lib/menu";
+import { DISPLAY_CATEGORY_ORDER, groupItemsByCategory } from "@/lib/menu";
 import type { OrderState } from "@/lib/order-state";
 
 type Message = { role: "user" | "assistant"; content: string; itemIds?: string[]; showStoreMap?: boolean };
@@ -106,15 +106,25 @@ export default function Home() {
               <div key={i} className="space-y-2">
                 <ChatMessage role={msg.role} content={msg.content} />
                 {msg.role === "assistant" && msg.itemIds && msg.itemIds.length > 0 && (
-                  <div className="flex flex-wrap gap-3 pl-1">
-                    {msg.itemIds
-                      .map((id) => getMenuItem(id))
-                      .filter(Boolean)
-                      .map((item) => (
-                        <div key={item!.id} className="w-36 shrink-0">
-                          <MenuItemCard item={item!} />
+                  <div className="space-y-4 pl-1">
+                    {DISPLAY_CATEGORY_ORDER.map((category) => {
+                      const items = groupItemsByCategory(msg.itemIds!).get(category) ?? [];
+                      if (items.length === 0) return null;
+                      return (
+                        <div key={category}>
+                          <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-stone-500">
+                            {category}
+                          </h3>
+                          <div className="flex flex-wrap gap-3">
+                            {items.map((item) => (
+                              <div key={item.id} className="w-36 shrink-0">
+                                <MenuItemCard item={item} />
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      ))}
+                      );
+                    })}
                   </div>
                 )}
                 {msg.role === "assistant" && msg.showStoreMap && (

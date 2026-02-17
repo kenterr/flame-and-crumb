@@ -62,24 +62,38 @@ export const SAUCE_MAX_PER_ITEM = 2;
 
 export type CookingPreference = "rare" | "medium-rare" | "medium" | "medium-well" | "well-done";
 
+export type DisplayCategory = "Hamburgers" | "Sides" | "Drinks" | "Combos";
+
 export interface MenuItemBase {
   id: string;
   name: string;
   price: number;
   description: string;
   category: "entree" | "side" | "drink";
+  /** Section title when showing menu: Hamburgers, Sides, Drinks, Combos */
+  displayCategory: DisplayCategory;
   image?: string;
   /** e.g. ["spicy"], ["combo"] for recommendations */
   tags?: string[];
 }
 
+/** Order to show menu sections when displaying cards */
+export const DISPLAY_CATEGORY_ORDER: DisplayCategory[] = [
+  "Hamburgers",
+  "Sides",
+  "Drinks",
+  "Combos",
+];
+
 export const MENU_ITEMS: MenuItemBase[] = [
+  // —— Hamburgers ——
   {
     id: "classic-flame-burger",
     name: "Classic Flame Burger",
     price: 12.99,
     description: "Flame-grilled Angus beef, aged cheddar, lettuce, tomato, special sauce, brioche bun",
     category: "entree",
+    displayCategory: "Hamburgers",
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
   },
   {
@@ -88,16 +102,8 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 9.49,
     description: "Flame-grilled beef, pepper jack, jalapeños, chipotle mayo, brioche bun",
     category: "entree",
+    displayCategory: "Hamburgers",
     tags: ["spicy"],
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
-  },
-  {
-    id: "spicy-combo",
-    name: "Spicy Combo",
-    price: 9.99,
-    description: "Spicy Flame Burger + Fries. Best value under $10.",
-    category: "entree",
-    tags: ["spicy", "combo"],
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
   },
   {
@@ -106,6 +112,7 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 6.99,
     description: "Crispy wings tossed in buffalo sauce with ranch",
     category: "entree",
+    displayCategory: "Hamburgers",
     tags: ["spicy"],
     image: "https://images.unsplash.com/photo-1567620832903-0fc476de5b2b?w=400&q=80",
   },
@@ -115,6 +122,7 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 10.99,
     description: "Crispy chicken, pickles, mayo, brioche bun",
     category: "entree",
+    displayCategory: "Hamburgers",
     image: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=400&q=80",
   },
   {
@@ -123,14 +131,17 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 11.99,
     description: "House-made black bean patty, avocado, lettuce, tomato, chipotle aioli",
     category: "entree",
+    displayCategory: "Hamburgers",
     image: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400&q=80",
   },
+  // —— Sides ——
   {
     id: "fries",
     name: "Fries",
     price: 3.99,
     description: "Crispy seasoned fries",
     category: "side",
+    displayCategory: "Sides",
     image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80",
   },
   {
@@ -139,6 +150,7 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 5.99,
     description: "Fries topped with cheese sauce and bacon",
     category: "side",
+    displayCategory: "Sides",
     tags: ["slang"],
     image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80",
   },
@@ -148,6 +160,7 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 4.49,
     description: "Beer-battered onion rings with ranch",
     category: "side",
+    displayCategory: "Sides",
     image: "https://images.unsplash.com/photo-1639024471283-03518883512d?w=400&q=80",
   },
   {
@@ -156,6 +169,8 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 2.99,
     description: "Creamy classic coleslaw",
     category: "side",
+    displayCategory: "Sides",
+    image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80",
   },
   {
     id: "side-salad",
@@ -163,13 +178,17 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 3.49,
     description: "Mixed greens, tomato, cucumber, vinaigrette",
     category: "side",
+    displayCategory: "Sides",
+    image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80",
   },
+  // —— Drinks ——
   {
     id: "coke",
     name: "Coke",
     price: 2.79,
     description: "Coca-Cola",
     category: "drink",
+    displayCategory: "Drinks",
     image: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&q=80",
   },
   {
@@ -178,6 +197,62 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 2.79,
     description: "Diet Coca-Cola",
     category: "drink",
+    displayCategory: "Drinks",
+    image: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&q=80",
+  },
+  {
+    id: "sprite",
+    name: "Sprite",
+    price: 2.79,
+    description: "Sprite lemon-lime soda",
+    category: "drink",
+    displayCategory: "Drinks",
+    image: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&q=80",
+  },
+  {
+    id: "dr-pepper",
+    name: "Dr Pepper",
+    price: 2.79,
+    description: "Dr Pepper",
+    category: "drink",
+    displayCategory: "Drinks",
+    image: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&q=80",
+  },
+  {
+    id: "root-beer",
+    name: "Root Beer",
+    price: 2.79,
+    description: "Root beer",
+    category: "drink",
+    displayCategory: "Drinks",
+    image: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&q=80",
+  },
+  {
+    id: "fanta-orange",
+    name: "Fanta Orange",
+    price: 2.79,
+    description: "Fanta Orange",
+    category: "drink",
+    displayCategory: "Drinks",
+    image: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&q=80",
+  },
+  {
+    id: "mountain-dew",
+    name: "Mountain Dew",
+    price: 2.79,
+    description: "Mountain Dew",
+    category: "drink",
+    displayCategory: "Drinks",
+    image: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&q=80",
+  },
+  {
+    id: "ginger-ale",
+    name: "Ginger Ale",
+    price: 2.79,
+    description: "Ginger ale",
+    category: "drink",
+    displayCategory: "Drinks",
+    image: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&q=80",
   },
   {
     id: "lemonade",
@@ -185,6 +260,7 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 3.29,
     description: "Fresh-squeezed lemonade",
     category: "drink",
+    displayCategory: "Drinks",
     image: "https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=400&q=80",
   },
   {
@@ -193,6 +269,8 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 2.99,
     description: "House brewed iced tea",
     category: "drink",
+    displayCategory: "Drinks",
+    image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80",
   },
   {
     id: "water",
@@ -200,11 +278,109 @@ export const MENU_ITEMS: MenuItemBase[] = [
     price: 0,
     description: "Still water",
     category: "drink",
+    displayCategory: "Drinks",
+    image: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=400&q=80",
+  },
+  // —— Combos ——
+  {
+    id: "spicy-combo",
+    name: "Spicy Combo",
+    price: 9.99,
+    description: "Spicy Flame Burger + Fries. Best value under $10.",
+    category: "entree",
+    displayCategory: "Combos",
+    tags: ["spicy", "combo"],
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
+  },
+  {
+    id: "classic-combo",
+    name: "Classic Combo",
+    price: 14.99,
+    description: "Classic Flame Burger + Fries + Drink (Coke, Diet Coke, Sprite, Lemonade, or Iced Tea)",
+    category: "entree",
+    displayCategory: "Combos",
+    tags: ["combo"],
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
+  },
+  {
+    id: "chicken-combo",
+    name: "Chicken Combo",
+    price: 12.99,
+    description: "Crispy Chicken Sandwich + Fries + Drink",
+    category: "entree",
+    displayCategory: "Combos",
+    tags: ["combo"],
+    image: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=400&q=80",
+  },
+  {
+    id: "veggie-combo",
+    name: "Veggie Combo",
+    price: 13.99,
+    description: "Veggie Burger + Side Salad + Drink",
+    category: "entree",
+    displayCategory: "Combos",
+    tags: ["combo"],
+    image: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400&q=80",
+  },
+  {
+    id: "wings-combo",
+    name: "Wings Combo",
+    price: 10.99,
+    description: "Hot Wings (6 pc) + Fries + Drink",
+    category: "entree",
+    displayCategory: "Combos",
+    tags: ["spicy", "combo"],
+    image: "https://images.unsplash.com/photo-1567620832903-0fc476de5b2b?w=400&q=80",
+  },
+  {
+    id: "double-burger-combo",
+    name: "Double Burger Combo",
+    price: 16.99,
+    description: "Classic Flame Burger with extra patty + Fries + Drink",
+    category: "entree",
+    displayCategory: "Combos",
+    tags: ["combo"],
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
+  },
+  {
+    id: "family-combo",
+    name: "Family Combo",
+    price: 24.99,
+    description: "2 Classic Flame Burgers + 2 Spicy Combos + Large Fries + 4 Drinks",
+    category: "entree",
+    displayCategory: "Combos",
+    tags: ["combo"],
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
+  },
+  {
+    id: "loaded-combo",
+    name: "Loaded Combo",
+    price: 11.99,
+    description: "Spicy Flame Burger + Loaded Fries + Drink",
+    category: "entree",
+    displayCategory: "Combos",
+    tags: ["spicy", "combo"],
+    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
   },
 ];
 
 export function getMenuItem(id: string): MenuItemBase | undefined {
   return MENU_ITEMS.find((i) => i.id === id);
+}
+
+/** Group menu items by displayCategory for sectioned display. Order follows DISPLAY_CATEGORY_ORDER. */
+export function groupItemsByCategory(itemIds: string[]): Map<DisplayCategory, MenuItemBase[]> {
+  const map = new Map<DisplayCategory, MenuItemBase[]>();
+  for (const cat of DISPLAY_CATEGORY_ORDER) {
+    map.set(cat, []);
+  }
+  for (const id of itemIds) {
+    const item = getMenuItem(id);
+    if (item && map.has(item.displayCategory)) {
+      map.get(item.displayCategory)!.push(item);
+    }
+  }
+  return map;
 }
 
 export function getStore(id: StoreId): Store | undefined {
