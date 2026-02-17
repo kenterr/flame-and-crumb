@@ -443,6 +443,8 @@ export async function POST(req: Request) {
         .join("\n")
         .trim();
       s = s.replace(/\s*(Human|User):\s*[^\n]*/gi, "").trim();
+      // Strip Grok tool-result tags so the user never sees e.g. <grok:richcontent type="tool_result">...</grok:richcontent>
+      s = s.replace(/<grok:[\w-]+(?:\s[^>]*)?>[\s\S]*?<\/grok:[\w-]+>/gi, "").trim();
       s = s.replace(/\n{2,}/g, "\n\n").trim();
       if (!s || /^\s*(Human|User):/i.test(s)) {
         return displayItemIds?.length
