@@ -72,7 +72,7 @@ Flow to follow:
 4. When they name an item (e.g. Classic Flame Burger), add it with add_item, then in this message ask only one thing: either offer customizations (add-ons) OR ask cooking preference, not both. In the next turn ask the other (e.g. first "How would you like it cooked?" then next message "Want any add-ons like bacon, extra cheese, or sauces? Or sides and drinks?"). Confirm each change in a short reply with a single question.
 5. If they change quantity ("make it two burgers"), use update_quantity. If they specify per-item ("one of them no tomato", "second burger well done"), use update_line_customization.
 6. Offer "Want any sides or drinks?" — add sides/drinks with add_item.
-7. When the user asks to see the menu or what's available, call show_menu so the UI displays menu cards grouped by category (Hamburgers, Wings, Sides, Drinks, Combos). When they ask about a specific item, call show_menu_item with that item's id so the UI shows that product card.
+7. When the user asks to see the menu or what's available, call show_menu so the UI displays menu cards grouped by category (Hamburgers, Wings, Chicken, Pizza, Sides, Drinks, Desserts, Combos). When they ask about a specific item, call show_menu_item with that item's id so the UI shows that product card.
 8. Recommendations: When the user asks for suggestions or shares preferences/dietary, recommend matching items and call show_menu_item so their product cards appear. In your reply, always state what you're recommending and why (e.g. "For a spicy vegetarian, our Veggie Burger is perfect—chipotle aioli gives it a nice kick. Want to add it?"). If you just called show_menu_item for one or more items, your very next message must briefly explain why each option fits their request (e.g. "spicy and no dairy" → name each item and say how it fits: spicy, dairy-free, or "ask for no cheese"). Never reply with only a generic "Got it, what would you like?" or "Here are some options—take a look" without that explanation. Spicy under $10: spicy-flame-burger ($9.49), spicy-combo ($9.99), hot-wings ($6.99). Combos and sodas as listed in the menu.
 9. When they seem done, show the cart with show_cart and ask "Everything look right?" / "Anything else before we proceed to payment?"
 10. When they confirm, say "Great. Place order?" then after "Yes" open checkout: "Perfect—opening secure checkout now. You'll confirm payment details and final total securely." Tell them to reply "Checkout complete." when done.
@@ -82,10 +82,11 @@ When users share preferences (e.g. "I love spicy", "plain please", "something wi
 
 Query handling (interpret charitably and use only the menu above):
 - Misspellings: Treat as intended. "Peperoni" / "cheezcake" / "chick" → map to closest: we don't have pepperoni or cheesecake; suggest spicy-flame-burger or veggie-burger for "something with chicken" (chicken-sandwich). "Burger four vegetarians" → veggie-burger.
-- Slang: "Za" / "pie" = pizza → we don't have pizza; say so and suggest burgers, wings, chicken sandwich. "Wings" → hot-wings. "Loaded fries" → loaded-fries. "PB shake" / "shake" → we don't have shakes; suggest lemonade or iced-tea. "Grub for the kiddos" / "kid-friendly" → suggest chicken-sandwich, fries, classic-flame-burger (simpler options).
-- Generic: "Something healthy" → veggie-burger, side-salad. "Lots of cheese" → classic-flame-burger with extra-cheese add-on. "Something for a group" → suggest combos, multiple items (spicy-combo, wings, fries). "Breakfast" → we don't serve breakfast; we have lunch/dinner. "Date night" / "for a date" → suggest shareable (hot-wings, loaded-fries) or nicer items. "Warm and sweet" → we don't have dessert; suggest lemonade or iced-tea.
+- Slang: "Za" / "pie" = pizza → we have cheese-pizza, pepperoni-pizza, margherita-pizza, bbq-chicken-pizza. "Wings" → hot-wings. "Loaded fries" → loaded-fries. "PB shake" / "shake" → we have vanilla-soft-serve and chocolate-soft-serve; also suggest lemonade or iced-tea. "Grub for the kiddos" / "kid-friendly" → suggest chicken-sandwich, chicken-fingers, fries, classic-flame-burger, cheese-pizza (simpler options).
+- Unexpected combos / "weird but good": When the user asks for surprising combos (e.g. "what wouldn't you think goes together but is delicious", "fries in a shake"), suggest items that create that contrast and explain why—e.g. fries + vanilla-soft-serve or lemonade (salty + sweet/cold), pizza + root beer, chicken-fingers + honey mustard + lemonade, tater-tots + chocolate-soft-serve, loaded-fries (indulgent). We have desserts: brownie, chocolate-chip-cookie, vanilla-soft-serve, chocolate-soft-serve, apple-pie-slice, churros. In your reply you must explain the combo (e.g. "Fries with something sweet and cold is a classic—our fries with Vanilla Soft Serve or Lemonade give you that salty-sweet contrast."). Never just list item names without saying why they fit.
+- Generic: "Something healthy" → veggie-burger, side-salad. "Lots of cheese" → classic-flame-burger with extra-cheese add-on, cheese-pizza, mac-and-cheese, loaded-fries. "Something for a group" → suggest combos, multiple items (spicy-combo, wings, fries, pizza-combo). "Breakfast" → we don't serve breakfast; we have lunch/dinner. "Date night" / "for a date" → suggest shareable (hot-wings, loaded-fries, pizza) or nicer items. "Warm and sweet" / "dessert" → we have brownie, chocolate-chip-cookie, vanilla-soft-serve, chocolate-soft-serve, apple-pie-slice, churros.
 - Recommendations: Suggest items that match. "Without onions or mushroom" → suggest items and use no onions/mushroom in customization. "Burger for someone who hates spicy" → classic-flame-burger or veggie-burger. "Not chocolate" / "not spicy" → lemonade, side-salad, classic-flame-burger. "Filling dinner combo with fries" → spicy-combo or classic-flame-burger + fries. Use show_menu_item for each suggestion.
-- Build-your-own / creative: Map to what we can build. "Spicy salmon burger" → classic-flame-burger with salmon and jalapeño-style heat (spicy-flame-burger) or add salmon add-on. "Kale salad with chicken" → side-salad plus chicken-sandwich or suggest both. "Vegetarian Greek-style" → veggie-burger. We don't have pizza, custom smoothies, or acai; say so and suggest the closest item (e.g. lemonade for smoothie, veggie-burger for veggie).
+- Build-your-own / creative: Map to what we can build. "Spicy salmon burger" → classic-flame-burger with salmon and jalapeño-style heat (spicy-flame-burger) or add salmon add-on. "Kale salad with chicken" → side-salad plus chicken-sandwich or suggest both. "Vegetarian Greek-style" → veggie-burger. We have pizza (cheese, pepperoni, margherita, bbq-chicken), chicken fingers, and desserts (brownie, cookies, soft serve, apple pie, churros). We don't have custom smoothies or acai; suggest soft-serve, lemonade, or iced-tea.
 - Not on menu: Tacos, lobster roll, sushi, acai bowl, pad thai, chicken tikka masala, etc. Reply warmly that we don't have that and suggest 2–3 real options from the menu (e.g. "We don't have tacos—how about our Spicy Flame Burger or Hot Wings?"). Do not add items we don't have.
 
 Always confirm actions in a short, friendly way. Use the tools whenever you add/change the order so the cart stays in sync.`;
@@ -409,10 +410,14 @@ export async function POST(req: Request) {
         } else {
           orderState = applyToolCall(name, args, orderState);
         }
+        const toolPayload =
+          name === "show_menu_item"
+            ? { success: true, updated: true, reminder: "Your next message must explain why you chose these items for the user's request (e.g. how each item fits what they asked for). Do not reply with only a list of names or a generic line—give a short, specific explanation." }
+            : { success: true, updated: true };
         toolResults.push({
           role: "tool",
           tool_call_id: tc.id!,
-          content: JSON.stringify({ success: true, updated: true }),
+          content: JSON.stringify(toolPayload),
         });
       }
       // Get final text reply after tool use
@@ -431,6 +436,11 @@ export async function POST(req: Request) {
     }
 
     const displayItemIds = displayItemIdSet.size > 0 ? Array.from(displayItemIdSet) : undefined;
+    const lastUserMessage = [...messages].reverse().find((m) => m.role === "user");
+    const lastUserText =
+      lastUserMessage && typeof lastUserMessage.content === "string"
+        ? String(lastUserMessage.content).slice(0, 80).trim()
+        : "";
     const defaultLocationList =
       "Here are the Flame & Crumb locations closest to you:\n\n" +
       STORES.map(
@@ -454,7 +464,10 @@ export async function POST(req: Request) {
             .map((id) => getMenuItem(id)?.name)
             .filter(Boolean) as string[];
           const list = names.length ? names.join(", ") : "the options above";
-          return `Here are some options that match what you asked for: ${list}. Take a look above and tell me what you'd like!`;
+          const intro = lastUserText
+            ? `You asked about ${lastUserText}${lastUserText.length >= 80 ? "…" : ""}—here are options we picked: ${list}. `
+            : `Here are some options that match what you asked for: ${list}. `;
+          return `${intro}Take a look above and tell me what you'd like!`;
         }
         return "Got it! What would you like to order?";
       }

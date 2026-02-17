@@ -62,7 +62,15 @@ export const SAUCE_MAX_PER_ITEM = 2;
 
 export type CookingPreference = "rare" | "medium-rare" | "medium" | "medium-well" | "well-done";
 
-export type DisplayCategory = "Hamburgers" | "Wings" | "Sides" | "Drinks" | "Combos";
+export type DisplayCategory =
+  | "Hamburgers"
+  | "Wings"
+  | "Chicken"
+  | "Pizza"
+  | "Sides"
+  | "Drinks"
+  | "Desserts"
+  | "Combos";
 
 export interface MenuItemBase {
   id: string;
@@ -81,8 +89,11 @@ export interface MenuItemBase {
 export const DISPLAY_CATEGORY_ORDER: DisplayCategory[] = [
   "Hamburgers",
   "Wings",
+  "Chicken",
+  "Pizza",
   "Sides",
   "Drinks",
+  "Desserts",
   "Combos",
 ];
 
@@ -117,6 +128,26 @@ export const MENU_ITEMS: MenuItemBase[] = [
     tags: ["spicy"],
     image: "https://images.unsplash.com/photo-1767065703660-7f14b6e29210?w=400&q=80",
   },
+  // —— Chicken ——
+  {
+    id: "chicken-fingers",
+    name: "Chicken Fingers (5 pc)",
+    price: 7.99,
+    description: "Crispy tenders with your choice of honey mustard, BBQ, or ranch",
+    category: "entree",
+    displayCategory: "Chicken",
+    image: "https://images.unsplash.com/photo-1562967916-eb82221dfb92?w=400&q=80",
+  },
+  {
+    id: "buffalo-chicken-fingers",
+    name: "Buffalo Chicken Fingers (5 pc)",
+    price: 8.49,
+    description: "Spicy buffalo-battered tenders with blue cheese or ranch",
+    category: "entree",
+    displayCategory: "Chicken",
+    tags: ["spicy"],
+    image: "https://images.unsplash.com/photo-1562967916-eb82221dfb92?w=400&q=80",
+  },
   {
     id: "chicken-sandwich",
     name: "Crispy Chicken Sandwich",
@@ -134,6 +165,43 @@ export const MENU_ITEMS: MenuItemBase[] = [
     category: "entree",
     displayCategory: "Hamburgers",
     image: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400&q=80",
+  },
+  // —— Pizza ——
+  {
+    id: "cheese-pizza",
+    name: "Cheese Pizza",
+    price: 10.99,
+    description: "12\" thin crust, house red sauce, mozzarella",
+    category: "entree",
+    displayCategory: "Pizza",
+    image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=80",
+  },
+  {
+    id: "pepperoni-pizza",
+    name: "Pepperoni Pizza",
+    price: 12.99,
+    description: "12\" thin crust, house red sauce, mozzarella, pepperoni",
+    category: "entree",
+    displayCategory: "Pizza",
+    image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400&q=80",
+  },
+  {
+    id: "margherita-pizza",
+    name: "Margherita Pizza",
+    price: 13.99,
+    description: "12\" thin crust, San Marzano sauce, fresh mozzarella, basil, olive oil",
+    category: "entree",
+    displayCategory: "Pizza",
+    image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=80",
+  },
+  {
+    id: "bbq-chicken-pizza",
+    name: "BBQ Chicken Pizza",
+    price: 14.99,
+    description: "12\" thin crust, BBQ sauce, grilled chicken, red onion, cilantro",
+    category: "entree",
+    displayCategory: "Pizza",
+    image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400&q=80",
   },
   // —— Sides ——
   {
@@ -181,6 +249,42 @@ export const MENU_ITEMS: MenuItemBase[] = [
     category: "side",
     displayCategory: "Sides",
     image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80",
+  },
+  {
+    id: "mac-and-cheese",
+    name: "Mac & Cheese",
+    price: 4.99,
+    description: "Creamy cheddar macaroni with a crispy breadcrumb top",
+    category: "side",
+    displayCategory: "Sides",
+    image: "https://images.unsplash.com/photo-1543339494-b4cd4f7ba686?w=400&q=80",
+  },
+  {
+    id: "tater-tots",
+    name: "Tater Tots",
+    price: 3.99,
+    description: "Crispy golden tater tots with ketchup or ranch",
+    category: "side",
+    displayCategory: "Sides",
+    image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80",
+  },
+  {
+    id: "sweet-potato-fries",
+    name: "Sweet Potato Fries",
+    price: 4.49,
+    description: "Crispy sweet potato fries with chipotle aioli",
+    category: "side",
+    displayCategory: "Sides",
+    image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80",
+  },
+  {
+    id: "mozzarella-sticks",
+    name: "Mozzarella Sticks (6 pc)",
+    price: 5.49,
+    description: "Fried mozzarella with marinara",
+    category: "side",
+    displayCategory: "Sides",
+    image: "https://images.unsplash.com/photo-1531749668029-2db88e4276c7?w=400&q=80",
   },
   // —— Drinks ——
   {
@@ -282,6 +386,61 @@ export const MENU_ITEMS: MenuItemBase[] = [
     displayCategory: "Drinks",
     image: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=400&q=80",
   },
+  // —— Desserts ——
+  {
+    id: "brownie",
+    name: "Brownie",
+    price: 3.99,
+    description: "Warm chocolate brownie, optional scoop of vanilla ice cream",
+    category: "side",
+    displayCategory: "Desserts",
+    image: "https://images.unsplash.com/photo-1607920591413-7ec33ef8c0fa?w=400&q=80",
+  },
+  {
+    id: "chocolate-chip-cookie",
+    name: "Chocolate Chip Cookie",
+    price: 2.49,
+    description: "Fresh-baked cookie, soft and chewy",
+    category: "side",
+    displayCategory: "Desserts",
+    image: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=400&q=80",
+  },
+  {
+    id: "vanilla-soft-serve",
+    name: "Vanilla Soft Serve",
+    price: 3.49,
+    description: "Creamy vanilla soft serve in a cup or cone",
+    category: "side",
+    displayCategory: "Desserts",
+    image: "https://images.unsplash.com/photo-1557142046-c704a3adf364?w=400&q=80",
+  },
+  {
+    id: "chocolate-soft-serve",
+    name: "Chocolate Soft Serve",
+    price: 3.49,
+    description: "Rich chocolate soft serve in a cup or cone",
+    category: "side",
+    displayCategory: "Desserts",
+    image: "https://images.unsplash.com/photo-1557142046-c704a3adf364?w=400&q=80",
+  },
+  {
+    id: "apple-pie-slice",
+    name: "Apple Pie Slice",
+    price: 4.49,
+    description: "Warm apple pie slice with cinnamon, optional ice cream",
+    category: "side",
+    displayCategory: "Desserts",
+    image: "https://images.unsplash.com/photo-1535920527002-b35e96722eb9?w=400&q=80",
+  },
+  {
+    id: "churros",
+    name: "Churros (4 pc)",
+    price: 4.99,
+    description: "Crispy cinnamon-sugar churros with chocolate dipping sauce",
+    category: "side",
+    displayCategory: "Desserts",
+    image: "https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=400&q=80",
+  },
   // —— Combos ——
   {
     id: "spicy-combo",
@@ -362,6 +521,26 @@ export const MENU_ITEMS: MenuItemBase[] = [
     displayCategory: "Combos",
     tags: ["spicy", "combo"],
     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
+  },
+  {
+    id: "chicken-fingers-combo",
+    name: "Chicken Fingers Combo",
+    price: 10.99,
+    description: "Chicken Fingers (5 pc) + Fries + Drink",
+    category: "entree",
+    displayCategory: "Combos",
+    tags: ["combo"],
+    image: "https://images.unsplash.com/photo-1562967916-eb82221dfb92?w=400&q=80",
+  },
+  {
+    id: "pizza-combo",
+    name: "Pizza Combo",
+    price: 14.99,
+    description: "Cheese or Pepperoni Pizza + Fries or Side + Drink",
+    category: "entree",
+    displayCategory: "Combos",
+    tags: ["combo"],
+    image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=80",
   },
 ];
 
