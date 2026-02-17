@@ -115,7 +115,7 @@ export const MENU_ITEMS: MenuItemBase[] = [
     category: "entree",
     displayCategory: "Wings",
     tags: ["spicy"],
-    image: "https://images.unsplash.com/photo-1567620832903-0fc476de5b2b?w=400&q=80",
+    image: "https://images.unsplash.com/photo-1613564834361-9436948817d1?w=400&q=80",
   },
   {
     id: "chicken-sandwich",
@@ -331,7 +331,7 @@ export const MENU_ITEMS: MenuItemBase[] = [
     category: "entree",
     displayCategory: "Combos",
     tags: ["spicy", "combo"],
-    image: "https://images.unsplash.com/photo-1567620832903-0fc476de5b2b?w=400&q=80",
+    image: "https://images.unsplash.com/photo-1613564834361-9436948817d1?w=400&q=80",
   },
   {
     id: "double-burger-combo",

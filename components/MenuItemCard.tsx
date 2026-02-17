@@ -3,6 +3,10 @@
 import { useState } from "react";
 import type { MenuItemBase } from "@/lib/menu";
 
+/** Fixed dimensions so every card matches (image + content same size). Image 6.75rem (4:3 for 9rem); content min 7.25rem. */
+const IMAGE_HEIGHT = "6.75rem";
+const CONTENT_MIN_HEIGHT = "7.25rem";
+
 interface MenuItemCardProps {
   item: MenuItemBase;
   compact?: boolean;
@@ -21,14 +25,20 @@ export function MenuItemCard({ item, compact }: MenuItemCardProps) {
       }`}
     >
       <div
-        className={`relative flex shrink-0 items-center justify-center bg-stone-100 ${compact ? "h-14 w-14 shrink-0 rounded-lg" : "aspect-[4/3] w-full"}`}
-        style={!compact ? { aspectRatio: "4/3" } : undefined}
+        className={`relative flex shrink-0 items-center justify-center overflow-hidden bg-stone-100 ${
+          compact ? "h-14 w-14 rounded-lg" : "w-full"
+        }`}
+        style={
+          !compact
+            ? { height: IMAGE_HEIGHT, minHeight: IMAGE_HEIGHT }
+            : undefined
+        }
       >
         {showImage ? (
           <img
             src={item.image}
             alt={item.name}
-            className={`object-cover ${compact ? "h-full w-full rounded-lg" : "h-full w-full"}`}
+            className={`object-cover object-center ${compact ? "h-full w-full rounded-lg" : "h-full w-full"}`}
             loading="lazy"
             onError={() => setImgError(true)}
           />
@@ -42,7 +52,12 @@ export function MenuItemCard({ item, compact }: MenuItemCardProps) {
         className={
           compact
             ? "min-w-0 flex-1 py-1 pr-2"
-            : "flex min-h-0 flex-1 flex-col p-3"
+            : "flex min-h-0 flex-1 flex-col overflow-hidden p-3"
+        }
+        style={
+          !compact
+            ? { minHeight: CONTENT_MIN_HEIGHT }
+            : undefined
         }
       >
         <h3 className="truncate font-semibold text-stone-800" title={item.name}>
@@ -52,7 +67,7 @@ export function MenuItemCard({ item, compact }: MenuItemCardProps) {
           ${item.price.toFixed(2)}
         </p>
         {!compact && (
-          <p className="mt-1 line-clamp-2 min-h-0 flex-1 text-xs text-stone-500">
+          <p className="mt-1 line-clamp-2 text-xs text-stone-500">
             {item.description}
           </p>
         )}
