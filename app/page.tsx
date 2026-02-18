@@ -116,7 +116,7 @@ export default function Home() {
       <div
         className={`flex flex-1 flex-col overflow-hidden md:flex-row md:gap-4 ${hasCart ? "md:pr-[18rem]" : ""}`}
       >
-        <div className="flex min-w-0 flex-1 flex-col overflow-hidden glass-panel">
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-white/40 shadow-lg shadow-stone-200/50 backdrop-blur-xl">
           <div className="flex-1 overflow-y-auto p-4 pb-28 space-y-3 md:pb-24">
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center py-12 text-center text-stone-500">
