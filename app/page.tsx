@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ChatMessage } from "@/components/ChatMessage";
 import { MenuItemCard } from "@/components/MenuItemCard";
 import { OrderSummary } from "@/components/OrderSummary";
@@ -27,6 +27,13 @@ export default function Home() {
   const scrollToBottom = useCallback(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
+
+  // Scroll main text area to bottom after each new message (including LLM response) once DOM has updated
+  useEffect(() => {
+    if (messages.length === 0) return;
+    const id = requestAnimationFrame(() => scrollToBottom());
+    return () => cancelAnimationFrame(id);
+  }, [messages, scrollToBottom]);
 
   const send = useCallback(async () => {
     const text = input.trim();
